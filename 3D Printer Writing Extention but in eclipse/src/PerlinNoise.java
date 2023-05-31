@@ -3,20 +3,21 @@ import java.awt.Graphics;
 public class PerlinNoise {
 	
 	static double smoothness = 0.5;
-	static int size = 100;
-	static double[][] PerlinMap = new double [size][size];
+	static int size = 11;
+	static double[][] PerlinMap = new double [size - 1][size - 1];
 	static double[][][] Vectors = new double [size][size][2];
 	
 	public static void main(String[] args) {
-		new MyFrame();
-		/**
+		new MyFrame(0);
+		new MyFrame(1);
+		
 		for(int i = 0; i < size; i++){
-			for(int j = 0; j < size; j++) {s
+			for(int j = 0; j < size; j++) {
 				//(r cos(i * 2pi/n) + h, r sin(i * 2pi/n) + k)
-				int rand = (int)Math.random() * 50;
+				int rand = (int) (Math.random() * 50);
 				double x = Math.cos(rand * Math.PI / 25);
 				
-				rand = (int)Math.random() * 50;
+				rand = (int) (Math.random() * 50);
 				double y = Math.sin(rand * Math.PI / 25);
 				
 				Vectors[i][j] = new double[] {x,y};
@@ -24,7 +25,13 @@ public class PerlinNoise {
 		}
 		
 		double[] input = new double[] {Math.random(),  Math.random()};
-		**/
+		
+		for(int i = 0; i < size - 1; i++){
+			for(int j = 0; j < size - 1; j++) {
+				PerlinMap[i][j] = findNoiseValue(Vectors[i][j], Vectors[i+1][j], Vectors[i+1][j+1], Vectors[i][j+1], input);
+			}
+		}
+		
 		
 		/*
 		// fill map with random 1, 0 (value Noise)
@@ -34,6 +41,10 @@ public class PerlinNoise {
 			}
 		}
 		*/
+		
+		
+		/*
+		// saddle point
 		double x = -1;
 		double y = -1;
 		for(int i = 0; i < size; i++){
@@ -43,13 +54,43 @@ public class PerlinNoise {
 			}
 			x += (double) 2/size;
 			y = -1;
-		}
-		//X^2
+		}*/
 		
 		
 		printNoiseMap(PerlinMap);
 	} 
 	
+	private static double findNoiseValue(double[] x0y0, double[] x1y0, double[] x1y1, double[] x0y1, double[] xy) {
+		// generate a vector going from the grid point to (x, y), which is easily calculated by subtracting 
+		// the grid point from (x, y)
+		double[] xy_x0y0 = new double[] {xy[0] - 0,  xy[1] - 0};
+		double[] xy_x1y0 = new double[] {xy[0] - 1,  xy[1] - 0};
+		double[] xy_x0y1 = new double[] {xy[0] - 0,  xy[1] - 1};
+		double[] xy_x1y1 = new double[] {xy[0] - 1,  xy[1] - 1};
+		
+		// the influence of each gradient can be calculated by performing a dot product of the gradient 
+		// and the vector going from its associated grid point to (x, y)
+		double s = x0y0[0] * xy_x0y0[0] + x0y0[1] * xy_x0y0[1];
+		double t = x1y0[0] * xy_x1y0[0] + x1y0[1] * xy_x1y0[1];
+		double u = x0y1[0] * xy_x0y1[0] + x0y1[1] * xy_x0y1[1];
+		double v = x1y1[0] * xy_x1y1[0] + x1y1[1] * xy_x1y1[1];
+	
+		/*
+		Sx = 3(x - x0)² - 2(x - x0)³
+		a = s + Sx(t - s)
+		b = u + Sx(v - u)
+		*/
+		
+		
+		
+		return 0.5 * ((s + t + u + v) / 4) + 0.5;
+	}
+	public double Sx(double x, double x0) {
+		return 3 * (x - x0) * (x - x0) - 2 * (x - x0) * (x - x0) * (x - x0);
+	}
+	
+	
+
 	public static void printNoiseMap(double[][] perlinMap) {
 		int size = perlinMap.length;
 		for(int i = 0; i < size; i++){

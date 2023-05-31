@@ -5,10 +5,12 @@ import java.awt.Graphics2D;
 public class MyFrame extends JFrame{
 	
 	MyPanel panel;
+	int type;
 	
-	MyFrame() {
+	MyFrame(int type) {
 		// TODO Auto-generated constructor stub
-		panel = new MyPanel();
+		this.type = type;
+		panel = new MyPanel(type);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(500,500);
 		
