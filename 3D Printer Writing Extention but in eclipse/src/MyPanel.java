@@ -23,7 +23,7 @@ public class MyPanel extends JPanel{
 			for(int j = 0; j < 500; j += gridSize) {
 				int x = i / gridSize;
 				int y = j / gridSize;
-				int RGB = (int) (PerlinMap[x][y] * 256);
+				int RGB = (int) (PerlinMap[x][y] * 255);
 				Color color = new Color(RGB, RGB, RGB);
 				g2D.setPaint(color);
 				g2D.fillRect(i, j, 50, 50);

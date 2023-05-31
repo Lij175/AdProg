@@ -3,7 +3,7 @@ import java.awt.Graphics;
 public class PerlinNoise {
 	
 	static double smoothness = 0.5;
-	static int size = 250;
+	static int size = 100;
 	static double[][] PerlinMap = new double [size][size];
 	static double[][][] Vectors = new double [size][size][2];
 	
@@ -25,12 +25,26 @@ public class PerlinNoise {
 		
 		double[] input = new double[] {Math.random(),  Math.random()};
 		**/
+		
+		/*
 		// fill map with random 1, 0 (value Noise)
 		for(int i = 0; i < size; i++){
 			for(int j = 0; j < size; j++) {
 				PerlinMap[i][j] = Math.random();
 			}
 		}
+		*/
+		double x = -1;
+		double y = -1;
+		for(int i = 0; i < size; i++){
+			for(int j = 0; j < size; j++) {
+				PerlinMap[i][j] = 0.5 * ((x * x) - (y * y)) + 0.5;
+				y += (double) 2/size;
+			}
+			x += (double) 2/size;
+			y = -1;
+		}
+		//X^2
 		
 		
 		printNoiseMap(PerlinMap);
