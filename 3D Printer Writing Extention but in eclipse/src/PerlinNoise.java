@@ -3,7 +3,7 @@ import java.awt.Graphics;
 public class PerlinNoise {
 	
 	static double smoothness = 0.5;
-	static int size = 11;
+	static int size = 10+1;
 	static double[][] PerlinMap = new double [size - 1][size - 1];
 	static double[][][] Vectors = new double [size][size][2];
 	
@@ -28,7 +28,7 @@ public class PerlinNoise {
 		
 		for(int i = 0; i < size - 1; i++){
 			for(int j = 0; j < size - 1; j++) {
-				PerlinMap[i][j] = findNoiseValue(Vectors[i][j], Vectors[i+1][j], Vectors[i+1][j+1], Vectors[i][j+1], input);
+				PerlinMap[i][j] = findNoiseValue(Vectors[i+1][j], Vectors[i+1][j+1], Vectors[i][j+1], Vectors[i][j], input);
 			}
 		}
 		
@@ -75,18 +75,16 @@ public class PerlinNoise {
 		double u = x0y1[0] * xy_x0y1[0] + x0y1[1] * xy_x0y1[1];
 		double v = x1y1[0] * xy_x1y1[0] + x1y1[1] * xy_x1y1[1];
 	
-		/*
-		Sx = 3(x - x0)² - 2(x - x0)³
-		a = s + Sx(t - s)
-		b = u + Sx(v - u)
-		*/
+		double Sx = Sx(xy[0], x0y0[0]);
+		double a = s + Sx * (t - s);
+		double b = u + Sx * (v - u);
 		
+		double Sy = Sx(xy[1], x0y0[1]);
 		
-		
-		return 0.5 * ((s + t + u + v) / 4) + 0.5;
+		return a + Sy * (b - a);
 	}
-	public double Sx(double x, double x0) {
-		return 3 * (x - x0) * (x - x0) - 2 * (x - x0) * (x - x0) * (x - x0);
+	public static double Sx(double x, double x0) {
+		return (3 * (x - x0) * (x - x0)) - (2 * (x - x0) * (x - x0) * (x - x0));
 	}
 	
 	

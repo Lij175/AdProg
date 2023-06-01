@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class PrinterWritingExtention {
 	// test
 
-	public static String user = "1082635";
+	public static String user = "ejyst";
  
 	
 	public static void main(String[] args) throws FileNotFoundException {
@@ -45,6 +45,7 @@ public class PrinterWritingExtention {
 			boolean isFontSizeGood = checkIfFontSizeGood(textScannerForCheckingFontSize, fontSize);
 			while(!isFontSizeGood) {
 				fontSize -= 0.1;
+				textScannerForCheckingFontSize = new Scanner(text_txt);
 				isFontSizeGood = checkIfFontSizeGood(textScannerForCheckingFontSize, fontSize);
 			}
 			
